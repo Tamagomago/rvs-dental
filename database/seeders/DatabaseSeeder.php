@@ -18,15 +18,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             MedicalConditionSeeder::class,
-            /* 
-
-                NEED TO CREATE A MIGRATION
-
-            */
-            // ProcedureSeeder::class,
-            // ToothNumberingSeeder::class,
-            // DentistSeeder::class,
-            // PatientSeeder::class
+            ProcedureSeeder::class,
+            ToothNumberingSeeder::class,
+            DentistSeeder::class,
+            PatientSeeder::class,
+            MedicalQuestionSeeder::class,
         ]);
     }
 }
