@@ -38,6 +38,8 @@ class ToothNumberingSeeder extends Seeder
                     'type'       => 'Permanent',
                     'quadrant'   => $quadrants[$quadrant],
                     'position'   => $position,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ];
             }
         }
@@ -49,6 +51,8 @@ class ToothNumberingSeeder extends Seeder
                     'type'       => 'Temporary',
                     'quadrant'   => $quadrants[$quadrant],
                     'position'   => $position,
+                    'created_at' => now(),
+                    'updated_at' => now(),                    
                 ];
             }
         }

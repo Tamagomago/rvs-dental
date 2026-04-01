@@ -14,42 +14,186 @@ class MedicalConditionSeeder extends Seeder
     public function run(): void
     {
         DB::table('medical_conditions')->insert([
-            ['condition_name' => 'High blood pressure'],
-            ['condition_name' => 'Heart disease'],
-            ['condition_name' => 'Diabetes'],
-            ['condition_name' => 'Tuberculosis'],
-            ['condition_name' => 'Asthma'],
-            ['condition_name' => 'Anemia'],
-            ['condition_name' => 'Goiter'],
-            ['condition_name' => 'Epilepsy / Convulsions'],
-            ['condition_name' => 'Stroke'],
-            ['condition_name' => 'Chest pain'],
-            ['condition_name' => 'Heart surgery'],
-            ['condition_name' => 'Heart attack'],
-            ['condition_name' => 'Low blood pressure'],
-            ['condition_name' => 'Kidney disease'],
-            ['condition_name' => 'Rheumatic fever'],
-            ['condition_name' => 'Hepatitis / Jaundice'],
-            ['condition_name' => 'Respiratory problems'],
-            ['condition_name' => 'AIDS or HIV Infection'],
-            ['condition_name' => 'Sexually transmitted disease'],
-            ['condition_name' => 'Stomach troubles / Ulcers'],
-            ['condition_name' => 'Heart murmur'],
-            ['condition_name' => 'Hepatitis / Liver disease'],
-            ['condition_name' => 'Swollen ankles'],
-            ['condition_name' => 'Radiation therapy'],
-            ['condition_name' => 'Cancer / Tumors'],
-            ['condition_name' => 'Fainting seizure'],
-            ['condition_name' => 'Rapid weight loss'],
-            ['condition_name' => 'Joint replacement / Implant'],
-            ['condition_name' => 'Hay fever / Allergies'],
-            ['condition_name' => 'Head injuries'],
-            ['condition_name' => 'Arthritis / Rheumatism'],
-            ['condition_name' => 'Blood disease'],
-            ['condition_name' => 'Bleeding problems'],
-            ['condition_name' => 'Emphysema'],
-            ['condition_name' => 'Angina'],
-            ['condition_name' => 'Others'],
+            [
+                'condition_name' => 'High blood pressure',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Heart disease',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Diabetes',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Tuberculosis',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Asthma',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Anemia',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Goiter',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Epilepsy / Convulsions',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Stroke',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Chest pain',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Heart surgery',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Heart attack',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Low blood pressure',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Kidney disease',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Rheumatic fever',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Hepatitis / Jaundice',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Respiratory problems',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'AIDS or HIV Infection',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Sexually transmitted disease',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Stomach troubles / Ulcers',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Heart murmur',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Hepatitis / Liver disease',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Swollen ankles',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Radiation therapy',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Cancer / Tumors',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Fainting seizure',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Rapid weight loss',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Joint replacement / Implant',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Hay fever / Allergies',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Head injuries',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Arthritis / Rheumatism',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Blood disease',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Bleeding problems',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Emphysema',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Angina',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
+            [
+                'condition_name' => 'Others',
+                'updated_at' => now(), 
+                'created_at' => now()
+            ],
         ]);
     }
 }

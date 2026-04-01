@@ -19,6 +19,8 @@ class DentistSeeder extends Seeder
                 'last_name'       => 'Santos',
                 'license_no'      => '12345',
                 'specialization'  => 'General Dentistry',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
 
@@ -26,12 +28,16 @@ class DentistSeeder extends Seeder
                 'last_name'       => 'Reyes',
                 'license_no'      => '23456',
                 'specialization'  => 'Orthodontics',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'first_name'      => 'Jose',
                 'last_name'       => 'Garcia',
                 'license_no'      => '34567',
                 'specialization'  => 'Pediatric Dentistry',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ]);
     }

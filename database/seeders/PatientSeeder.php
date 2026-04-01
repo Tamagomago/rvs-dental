@@ -24,6 +24,8 @@ class PatientSeeder extends Seeder
                 'contact_no' => '09171234567',
                 'marital_status' => 'Single',
                 'guardian_name'  => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),                
             ],
             [
                 'first_name'     => 'Maria',
@@ -35,6 +37,8 @@ class PatientSeeder extends Seeder
                 'contact_no' => '09181234567',
                 'marital_status' => 'Married',
                 'guardian_name'  => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),                
             ],
             [
                 'first_name'     => 'Jose',
@@ -46,6 +50,8 @@ class PatientSeeder extends Seeder
                 'contact_no' => '09191234567',
                 'marital_status' => 'Single',
                 'guardian_name'  => 'Ana Reyes',
+                'created_at' => now(),
+                'updated_at' => now(),                
             ],
         ]);
         
