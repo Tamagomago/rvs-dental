@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.getElementById('mobile-menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
+
+    if (!menuToggle || !mobileMenu) return;
+
     const line1 = document.getElementById('menu-line-1');
     const line2 = document.getElementById('menu-line-2');
     const line3 = document.getElementById('menu-line-3');
