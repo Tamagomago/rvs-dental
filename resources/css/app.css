@@ -24,4 +24,46 @@
     --color-tertiary: #66D1D1;
     --color-danger: #F43F5E;
     --color-danger-muted: #FFF1F2;
+    --color-background: #F8F9FA;
+    --color-border: rgba(111, 121, 122, 0.5);
+}
+
+@layer base {
+    body {
+        @apply bg-background;
+    }
+
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-border) transparent;
+    }
+
+    *::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: var(--color-border);
+        border-radius: 3px;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-primary);
+    }
+
+    *::-webkit-scrollbar-button {
+        display: none;
+        height: 0;
+        width: 0;
+    }
+}
+
+/* height of the entire screen excluding navbar height */
+@utility h-content {
+    @apply h-[calc(100dvh-77px)] md:h-[calc(100dvh-88px)];
 }
