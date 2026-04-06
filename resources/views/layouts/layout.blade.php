@@ -2,7 +2,10 @@
 
 <body>
 @auth
-    @include('layouts.navbar')
+    @hasSection('hideNavbar')
+    @else
+        @include('layouts.navbar')
+    @endif
 @endauth
 <main class="h-content">
     @yield('content')
