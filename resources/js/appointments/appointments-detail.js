@@ -102,6 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
     list.addEventListener('click', (e) => {
         const item = e.target.closest('.appointment-item');
         if (item) {
+            // Remove active class from all items
+            list.querySelectorAll('.appointment-item').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Add active class to clicked item
+            item.classList.add('active');
+
             const id = item.getAttribute('data-id');
             showDetail(id);
         }

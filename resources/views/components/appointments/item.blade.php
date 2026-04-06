@@ -1,6 +1,6 @@
 @props(['appointmentId', 'name', 'remarks', 'status', 'color'])
 
-<div class="appointment-item flex justify-between items-start px-6 py-5 hover:bg-gray-50 cursor-pointer transition"
+<div class="appointment-item flex justify-between items-start px-6 py-5 hover:bg-gray-50 [&.active]:bg-secondary cursor-pointer transition animate-fade-in-up"
      data-id="{{ $appointmentId }}">
 
     <div class="flex flex-col gap-1">

@@ -10,9 +10,30 @@ class AppointmentController extends Controller
 {
     public function index(Request $request)
     {
-        $rawAppointments = Appointment::with('patient')
-            ->orderBy('scheduled_at', 'asc')
-            ->paginate(10); // Initial fetch 10
+        $sort = $request->query('sort', 'asc');
+        $sort = in_array($sort, ['asc', 'desc']) ? $sort : 'asc';
+        $search = $request->query('search');
+        $date = $request->query('date'); // Expects YYYY-MM-DD
+
+        $query = Appointment::with('patient');
+
+        if ($search) {
+            $query->whereHas('patient', function ($q) use ($search) {
+                $q->where(function($inner) use ($search) {
+                    $inner->where('first_name', 'like', "%{$search}%")
+                          ->orWhere('last_name', 'like', "%{$search}%")
+                          ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
+                });
+            });
+        }
+
+        if ($date) {
+            $query->whereDate('scheduled_at', $date);
+        }
+
+        $rawAppointments = $query->orderBy('scheduled_at', $sort)
+            ->paginate(10)
+            ->withQueryString();
 
         $rawAppointments->getCollection()->transform(function ($appointment) {
             $color = match($appointment->status) {
@@ -42,7 +63,8 @@ class AppointmentController extends Controller
                 return response('', 204);
             }
 
-            return view('components.appointments.list', ['appointments' => $grouped])->render();
+            return response(view('components.appointments.list', ['appointments' => $grouped])->render())
+                ->header('X-Has-More', $rawAppointments->hasMorePages() ? '1' : '0');
         }
 
         return view('pages.appointments', [
