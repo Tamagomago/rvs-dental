@@ -14,6 +14,7 @@ class Appointment extends Model
         'dentist_id',
         'scheduled_at',
         'status',
+        'remarks'
     ];
 
     public function patient()

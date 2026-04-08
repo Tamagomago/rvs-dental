@@ -91,7 +91,10 @@ class AppointmentController extends Controller
     }
 
     public function update(UpdateAppointmentRequest $request, Appointment $appointment) {
+        $appointment->update($request->validated());
 
+        return redirect()->route('appointments.index')
+            ->with('success', 'Appointment updated successfully.');
     }
 
     public function show($id)

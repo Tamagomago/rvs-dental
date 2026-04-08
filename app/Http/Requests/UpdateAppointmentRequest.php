@@ -15,13 +15,23 @@ class UpdateAppointmentRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            //
+            'patient_id' => 'sometimes|integer|exists:patient,patient_id',
+            'dentist_id' => 'sometimes|integer|exists:dentist,dentist_id',
+            'scheduled_at' => 'sometimes|date|after:now',
+            'status' => 'sometimes|string|in:Scheduled,Complete,Cancelled,No Show',
+            'remarks' => 'sometimes|string|max:500'
         ];
     }
     public function messages(): array
     {
         return [
-            //
+            'dentist_id.required'   => 'Please assign a dentist.',
+            'dentist_id.exists'     => 'The selected dentist does not exist.',
+            'scheduled_at.required' => 'Please enter a schedule slot.',
+            'scheduled_at.after'    => 'The schedule must be a future date and time.',
+            'status.required'       => 'Please select a status.',
+            'status.in'             => 'The selected status is invalid.',
+            'remarks.max'           => 'Remarks must not exceed 500 characters.',
         ];
     }
 }
