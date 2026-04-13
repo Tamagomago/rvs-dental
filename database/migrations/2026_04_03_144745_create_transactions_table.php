@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description')
                 ->nullable();
             $table->enum('mode_of_payment',['cash','gcash','card'])
-                ->nullable(); //Amo pa lng ni na mga MOP gina kwa nila 
+                ->nullable();
             $table->decimal('debit_amount', 10, 2);
             $table->decimal('credit_amount', 10, 2);
             $table->decimal('running_balance', 10, 2);

@@ -49,7 +49,7 @@
                     <!-- Days Header -->
                     <div class="grid grid-cols-7 border-b border-edge  bg-white sticky top-0 z-10">
                         @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
-                            <div class="py-2 text-center     text-xs font-bold text-gray-500 uppercase tracking-wider">{{ $day }}</div>
+                            <div class="py-2 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">{{ $day }}</div>
                         @endforeach
                     </div>
                     <!-- Calendar Grid -->

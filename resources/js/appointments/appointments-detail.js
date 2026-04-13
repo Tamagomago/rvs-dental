@@ -37,7 +37,7 @@ window.showAppointmentDetail = async (id) => {
                             </svg>
                         </button>
                     </div>
-                    <p class="text-sm md:text-md font-medium text-gray-700">${data.patient_name} | ${data.dentist_name}</p>
+                    <p class="text-sm md:text-md font-medium text-gray-700">${data.patient_name} | Dr. ${data.dentist_name}</p>
                 </div>
 
                 <div class="divide-y divide-dotted divide-edge divide-opacity-50">
