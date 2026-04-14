@@ -70,7 +70,7 @@
         </div>
 
         <a href="{{ route('patients.show', $appointment->patient_id) }}" class="w-full mt-6 md:mt-8 bg-primary hover:bg-opacity-90 text-white py-3 md:py-4 px-6 rounded-sm font-bold text-sm flex items-center justify-center gap-2 transition-all">
-            VIEW FULL INFO <span class="text-lg">→</span>
+            VIEW APPOINTMENT <span class="text-lg">→</span>
         </a>
     </div>
 </div>

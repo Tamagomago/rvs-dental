@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
@@ -73,5 +75,21 @@ class PatientController extends Controller
 
     public function certificate() {
         return view('components.templates.certificate');
+    }
+
+    public function search(Request $request): JsonResponse {
+        $request->validate([
+            'query' => 'required|string|min:3|max:100'
+        ]);
+
+        $searchTerm = $request->input('query');
+        
+        $patients = Patient::where('first_name', 'like', "%{$searchTerm}%")
+            ->orWhere('last_name', 'like', "%{$searchTerm}%")
+            ->select('first_name', 'last_name', 'patient_id')
+            ->orderBy('last_name')
+            ->get(10);
+        
+        return response()->json($patients);
     }
 }
