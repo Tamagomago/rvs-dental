@@ -7,7 +7,7 @@
         </div>
 
         <div class="h-content md:h-full col-span-12 md:col-span-7 lg:col-span-8 flex flex-col overflow-auto border border-border rounded-xl">
-            <div class="bg-[#E1E3E4] p-5 flex justify-between items-center gap-2 sticky top-0 z-50">
+            <div class="bg-[#E1E3E4] border-b border-border p-5 flex justify-between items-center gap-2 sticky top-0 z-50">
                 <div class="relative flex items-center w-full max-w-sm bg-white rounded-lg">
                     <span class="absolute left-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
