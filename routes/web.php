@@ -14,9 +14,10 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('/calendar/data', [AppointmentController::class, 'calendar'])->name('appointments.calendar.data');
         Route::get('/{appointment}/view', [AppointmentController::class, 'view'])->name('appointments.view');
         Route::post('/{appointment}/upload', [AppointmentController::class, 'uploadProcedureImages'])->name('appointments.upload');
+        Route::get('/{appointment}/generate', [AppointmentController::class, 'generate'])->name('appointments.generate');
     });
     Route::prefix('/patients')->group(function() {
-        Route::get('/certificate', [PatientController::class, 'certificate']);
+        Route::get('/certificate', [PatientController::class, 'certificate']); // E REMOVE NA NI?
         Route::get('/search', [PatientController::class, 'search'])->name('patients.search');
     });
     Route::resource('appointments', AppointmentController::class);

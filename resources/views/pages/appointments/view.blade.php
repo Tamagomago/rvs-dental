@@ -4,6 +4,7 @@
     <div class="flex gap-2">
         <a href="{{ route('appointments.edit', $appointment) }}">Edit Appointment</a>
         <button type="button" id="upload-btn">Add Procedure Images</button>
+        <a href="{{ route('appointments.generate', $appointment) }}">Generate Certificate</a>
     </div>
 
     <div id="upload-form" class="hidden mt-4 p-4 rounded-lg bg-gray-50">
