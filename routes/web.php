@@ -16,10 +16,8 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::post('/{appointment}/upload', [AppointmentController::class, 'uploadProcedureImages'])->name('appointments.upload');
         Route::get('/{appointment}/generate', [AppointmentController::class, 'generate'])->name('appointments.generate');
     });
-    Route::prefix('/patients')->group(function() {
-        Route::get('/certificate', [PatientController::class, 'certificate']); // E REMOVE NA NI?
-        Route::get('/search', [PatientController::class, 'search'])->name('patients.search');
-    });
+    
+    Route::get('/patients/search', [PatientController::class, 'search'])->name('patients.search');
     Route::resource('appointments', AppointmentController::class);
     Route::resource('transactions', TransactionController::class);
     Route::resource('patients', PatientController::class);
