@@ -119,4 +119,26 @@ class AppointmentController extends Controller
     public function view(Appointment $appointment) {
         return view('pages.appointments.view', compact('appointment'));
     }
+ 
+    public function uploadProcedureImages(Request $request, Appointment $appointment) {
+        $request->validate([
+            'image' => 'required|array',
+            'images.*' => 'image|mimes:jpeg,jpg,png|max:10240'
+        ]);
+
+        if ($request->hasFile('images')) {
+            foreach($request->file('images') as $image) {
+                $folder = "appointments/{$appointment->appointment_id}";
+                $path = $image->store($folder, 'public');
+
+                $appointment->procedureFiles()->create([
+                    'appointment_id' => $appointment->appointment_id,
+                    'file_name' => basename($path),
+                    'file_type' => $image->getClientMimeType()
+                ]);
+            }
+        }
+
+        return back()->with('Success', 'Images uploaded successfully.');
+    }
 }

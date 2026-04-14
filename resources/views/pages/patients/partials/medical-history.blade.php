@@ -1,9 +1,10 @@
+@php use Illuminate\Support\Carbon; @endphp
 <div id="tab-medical-history" class="tab-panel h-full flex flex-col">
     <div class="w-full bg-secondary p-5 rounded-t-xl border-b border-border flex justify-between items-center">
         <p class="font-bold text-2xl md:text-3xl">Medical History</p>
         <div class="text-xs flex flex-col items-end text-right">
             <p>LAST UPDATED</p>
-            <p>{{ $medicalHistoryLastUpdatedAt ? \Illuminate\Support\Carbon::parse($medicalHistoryLastUpdatedAt)->format('F d, Y h:i A') : 'N/A' }}</p>
+            <p>{{ $medicalHistoryLastUpdatedAt ? Carbon::parse($medicalHistoryLastUpdatedAt)->format('F d, Y h:i A') : 'N/A' }}</p>
         </div>
     </div>
     <div class="flex-1 p-5 overflow-auto">

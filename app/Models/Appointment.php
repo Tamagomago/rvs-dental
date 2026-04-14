@@ -46,6 +46,9 @@ class Appointment extends Model
             ->withTimestamps();
     }
 
+    public function procedureFiles() {
+        return $this->hasMany(ProcedureFile::class, 'appointment_id', 'appointment_id');
+    }
     // --- Accessors ---
 
     public function getProcedureTypeAttribute(): string

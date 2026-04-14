@@ -43,12 +43,12 @@ class TransactionController extends Controller
         return view('pages.transactions.create');
     }
 
-    public function show($id)
+    public function show(Transaction $transaction)
     {
-        $transaction = Transaction::with([
+        $transaction->loadMissing([
             'ledger.appointmentProcedure.appointment.patient',
             'ledger.appointmentProcedure.procedure'
-        ])->findOrFail($id);
+        ]);
 
         if (request()->ajax()) {
             return view('pages.transactions.partials.details', compact('transaction'));
