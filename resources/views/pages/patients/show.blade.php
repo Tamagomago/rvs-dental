@@ -64,7 +64,6 @@
             <x-patients.tab-nav />
             <div id="tab-content" class="flex-1 h-full border border-border rounded-xl font-sans">
                 @include('pages.patients.partials.medical-history')
-                @include('pages.patients.partials.teeth-chart')
                 @include('pages.patients.partials.procedures')
             </div>
         </div>
