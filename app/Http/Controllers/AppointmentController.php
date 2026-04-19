@@ -124,8 +124,11 @@ class AppointmentController extends Controller
         return view('pages.appointments.generate', compact('appointment'));
     }
 
-    public function view(Appointment $appointment)
-    {
+    public function view(Appointment $appointment) {
+        $appointment->load([
+            'appointmentProcedures.dentalProcedure',
+            'appointmentProcedures.ledger'
+        ]);
         return view('pages.appointments.view', compact('appointment'));
     }
 
