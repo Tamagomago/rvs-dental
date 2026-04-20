@@ -4,7 +4,7 @@
 @section('content')
     <div class="flex flex-col gap-4 my-auto max-w-4xl mx-auto w-full">
         @include('pages.appointments.partials.certificate')
-        <div class="no-print flex justify-end">
+        <div class="no-print flex justify-end items-center gap-4">
             <button
                 onclick="window.print()"
                 class="px-6 py-3 rounded-xl flex gap-2 items-center hover:cursor-pointer transition-all bg-primary text-secondary"
@@ -16,6 +16,7 @@
                 </svg>
                 Print
             </button>
+            <a href="{{ route('appointments.view', $appointment) }}" class="px-6 py-3 border border-danger rounded-xl hover:bg-danger-muted text-danger">&larr; Back</a>
         </div>
     </div>
 @endsection

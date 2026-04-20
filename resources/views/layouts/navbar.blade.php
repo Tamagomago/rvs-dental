@@ -23,7 +23,7 @@
                 action="{{ route('logout') }}"
                 method="POST"
             >
-                <x-ui.button type="submit" variant="danger" class="rounded-xl">
+                <x-ui.button type="submit" variant="danger" class="rounded-xl text-danger">
                     LOG-OUT
                 </x-ui.button>
             </x-forms.container>
