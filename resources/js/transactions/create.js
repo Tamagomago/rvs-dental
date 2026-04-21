@@ -41,7 +41,7 @@ const updateTotals = (procedure) => {
     totalChargedEl.textContent = `₱${totalCharged.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     totalPaidEl.textContent = `₱${totalPaid.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     remainingBalanceEl.textContent = `₱${remainingBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-    
+
     ledgerSelector.value = procedure.ledger_id;
 
     payFullBtn.onclick = () => {
@@ -58,10 +58,15 @@ const selectAppointment = async (id) => {
     }
 
     currentProcedures = appointmentDetails.procedures;
-    const transactions = currentProcedures.flatMap(p => p.transactions);
+    const transactions = currentProcedures.flatMap(p =>
+        p.transactions.map(tx => ({
+            ...tx,
+            ledger_id: p.ledger_id
+        }))
+    );
 
     // Populate Ledger Selector
-    ledgerSelector.innerHTML = '<option value="" disabled selected>Choose procedure</option>' + 
+    ledgerSelector.innerHTML = '<option value="" disabled selected>Choose procedure</option>' +
         currentProcedures.map(p => `<option value="${p.ledger_id}">${p.procedure_name} (#${p.ledger_id})</option>`).join('');
 
     renderLedger(currentProcedures);
@@ -89,7 +94,7 @@ const renderLedger = (entries) => {
             <td class="py-4 text-sm font-bold text-gray-900">${entry.procedure_name}</td>
             <td class="py-4 text-xs text-gray-500 font-mono tracking-tighter">#${entry.ledger_id}</td>
             <td class="py-4 text-sm font-mono font-bold text-gray-900 text-right tracking-tight">₱${Number(entry.charged_price).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-        </tr>        
+        </tr>
     `).join('')
         : `
         <tr>
@@ -123,11 +128,20 @@ const renderTransactions = (transactions) => {
                     </div>
                 </td>
                 <td class="py-4 text-sm text-gray-900 text-right font-mono font-bold tracking-tight">₱${Number(tx.balance).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-            </tr>      
+                <td class="py-4 text-right">
+                    <div class="inline-flex items-center gap-2" data-edit-actions="${tx.transaction_id}">
+                        <button type="button" data-action="edit" data-transaction-id="${tx.transaction_id}" class="text-[10px] font-mono font-bold uppercase tracking-widest text-primary hover:text-primary/80">Edit</button>
+                    </div>
+                    <div class="hidden items-center justify-end gap-2" data-edit-form="${tx.transaction_id}">
+                        <button type="button" data-action="save" data-transaction-id="${tx.transaction_id}" class="text-[10px] font-mono font-bold uppercase tracking-widest text-primary hover:text-primary/80">Save</button>
+                        <button type="button" data-action="cancel" data-transaction-id="${tx.transaction_id}" class="text-[10px] font-mono font-bold uppercase tracking-widest text-danger hover:text-danger/80">Cancel</button>
+                    </div>
+                </td>
+            </tr>
         `).join('')
         : `
             <tr>
-                <td colspan="5" class="text-center py-12">
+                <td colspan="6" class="text-center py-12">
                     <p class="text-gray-400 font-mono italic text-xs uppercase tracking-widest">No transactions yet.</p>
                 </td>
             </tr>
@@ -254,8 +268,8 @@ document.addEventListener('patientSelected', async (e) => {
 
     patientInfoContainer.innerHTML = `
         <div class="flex gap-4 items-center bg-secondary bg-opacity-10 p-4 rounded-2xl border border-primary/10 animate-fade-in-up">
-            <img 
-                src="${patient.image_url}" 
+            <img
+                src="${patient.image_url}"
                 alt="Image of ${patient.full_name}"
                 class="w-16 h-16 bg-white border border-edge shrink-0 object-cover rounded-xl shadow-sm"
             >
@@ -286,7 +300,7 @@ document.addEventListener('patientSelected', async (e) => {
     try {
         const res = await fetch(`/patients/${patient.patient_id}/appointments`);
         const appointments = await res.json();
-        
+
         if (appointments.length === 0) {
             appointmentContainer.innerHTML = `
                 <div class="p-8 border border-dashed border-gray-300 rounded-2xl text-center bg-gray-50/50">
@@ -297,7 +311,7 @@ document.addEventListener('patientSelected', async (e) => {
         }
 
         appointmentContainer.innerHTML = appointments.map(appointment => `
-            <div 
+            <div
                 class="appointment-card cursor-pointer p-4 rounded-2xl border border-edge bg-white hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all group animate-fade-in-up"
                 data-appointment-id="${appointment.appointment_id}"
             >
@@ -325,12 +339,12 @@ document.addEventListener('patientSelected', async (e) => {
                     card.classList.remove('border-primary/50', 'bg-primary/5', 'ring-1', 'ring-primary/20', 'shadow-lg', 'shadow-primary/5');
                 });
                 el.classList.add('border-primary/50', 'bg-primary/5', 'ring-1', 'ring-primary/20', 'shadow-lg', 'shadow-primary/5');
-                
+
                 const id = el.dataset.appointmentId;
                 selectAppointment(id);
             })
         });
-        
+
     } catch (err) {
         console.error(err);
         appointmentContainer.innerHTML = `
