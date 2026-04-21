@@ -10,7 +10,7 @@
 
         @if (in_array($questionId, $radioOnly, true) || in_array($questionId, $radioWithNotes, true))
             <div class="flex flex-wrap items-center gap-4 md:shrink-0">
-                @foreach (['Yes', 'No', 'N/A'] as $option)
+                @foreach (['Yes', 'No'] as $option)
                     <label class="inline-flex items-center gap-2 text-sm cursor-pointer">
                         <input
                             type="radio"

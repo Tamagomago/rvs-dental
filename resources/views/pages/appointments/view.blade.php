@@ -27,7 +27,7 @@
                class="bg-primary hover:bg-primary/90 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-[10px] sm:text-xs font-mono uppercase tracking-widest transition-colors flex items-center gap-2 justify-center">
                 Certificate
             </a>
-            <a href="{{ route('appointments.generate', $appointment) }}"
+            <a href="{{ route('appointments.medical-form', $appointment) }}"
                class="bg-primary hover:bg-primary/90 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-[10px] sm:text-xs font-mono uppercase tracking-widest transition-colors flex items-center gap-2 justify-center">
                 Medical Form
             </a>

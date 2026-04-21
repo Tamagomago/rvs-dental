@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @php
-    $radioOnly = [1, 6, 7, 10];
+    $radioOnly = [1, 6, 7];
     $radioWithNotes = [2, 3, 4, 5, 8];
     $textOnly = [9, 13, 14];
 
@@ -14,6 +14,11 @@
     $selectedConditions = collect(old('conditions', $existingConditionIds ?? []))
         ->map(fn ($id) => (int) $id)
         ->all();
+
+    $otherConditionId = (int) ($conditions->firstWhere('condition_name', 'Others')?->id ?? 0);
+    $existingOtherConditionNotes = $otherConditionNotes ?? null;
+    $oldOtherConditionNotes = old('other_condition_notes');
+    $otherConditionNotes = $oldOtherConditionNotes !== null ? $oldOtherConditionNotes : $existingOtherConditionNotes;
 
     $resolveAnswer = function ($questionId) use ($oldResponses, $existingResponses) {
         $oldValue = data_get($oldResponses, "{$questionId}.answer");
@@ -46,11 +51,7 @@
     <x-forms.container action="{{ route('appointments.medical-form.store', $appointment) }}" method="POST" id="medical-form" class="flex flex-col gap-4 w-full md:w-2/3 p-4 md:p-8 font-mono">
             @if ($errors->any())
                 <div class="bg-red-50 border border-red-200 rounded p-3">
-                    <ul class="list-disc list-inside">
-                        @foreach($errors->all() as $error)
-                            <li class="text-red-500 text-sm">{{ $error }}</li>
-                        @endforeach
-                    </ul>
+                    <p class="text-red-500 text-sm">Please fill in all required inputs</p>
                 </div>
             @endif
 
@@ -138,6 +139,9 @@
                                         type="checkbox"
                                         name="conditions[]"
                                         value="{{ $condition->id }}"
+                                        @if ($otherConditionId !== 0 && (int) $condition->id === $otherConditionId)
+                                            data-other-condition="true"
+                                        @endif
                                         class="sr-only peer"
                                         @checked($checked)
                                     >
@@ -147,6 +151,20 @@
                             </li>
                         @endforeach
                     </ul>
+
+                    <div id="other-condition-notes-wrapper" class="{{ in_array($otherConditionId, $selectedConditions, true) ? '' : 'hidden' }}">
+                        <label for="other-condition-notes" class="block text-sm font-bold mb-1">Others (please specify)</label>
+                        <input
+                            type="text"
+                            id="other-condition-notes"
+                            name="other_condition_notes"
+                            class="w-full border border-border bg-white rounded-sm px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
+                            value="{{ $otherConditionNotes }}"
+                        >
+                        @error('other_condition_notes')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             </section>
 
@@ -154,7 +172,7 @@
                 <x-ui.button type="button" id="prev-step" variant="outline" class="rounded-xl text-xs md:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                     Previous
                 </x-ui.button>
-                <x-ui.button type="button" id="next-step" variant="primary" class="rounded-xl text-xs md:text-sm">
+                <x-ui.button type="button" id="next-step" variant="primary" class="rounded-xl text-xs md:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                     Next
                 </x-ui.button>
                 <x-ui.button type="submit" id="save-form" variant="primary" class="hidden rounded-xl text-xs md:text-sm">

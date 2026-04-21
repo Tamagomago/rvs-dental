@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevBtn = document.getElementById('prev-step');
     const nextBtn = document.getElementById('next-step');
     const saveBtn = document.getElementById('save-form');
+    const otherConditionCheckbox = document.querySelector('input[data-other-condition="true"]');
+    const otherConditionNotesWrapper = document.getElementById('other-condition-notes-wrapper');
+    const otherConditionNotesInput = document.getElementById('other-condition-notes');
 
     if (!steps.length || !prevBtn || !nextBtn || !saveBtn) return;
 
@@ -15,10 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (currentStep === steps.length) {
-            nextBtn.classList.add('hidden');
+            nextBtn.disabled = true;
             saveBtn.classList.remove('hidden');
         } else {
-            nextBtn.classList.remove('hidden');
+            nextBtn.disabled = false;
             saveBtn.classList.add('hidden');
         }
 
@@ -38,6 +41,24 @@ document.addEventListener('DOMContentLoaded', () => {
             renderStep();
         }
     });
+
+    if (otherConditionCheckbox && otherConditionNotesWrapper) {
+        const renderOtherConditionNotes = () => {
+            const shouldShow = otherConditionCheckbox.checked;
+
+            otherConditionNotesWrapper.classList.toggle('hidden', !shouldShow);
+
+            if (otherConditionNotesInput) {
+                otherConditionNotesInput.disabled = !shouldShow;
+                if (!shouldShow) {
+                    otherConditionNotesInput.value = '';
+                }
+            }
+        };
+
+        otherConditionCheckbox.addEventListener('change', renderOtherConditionNotes);
+        renderOtherConditionNotes();
+    }
 
     renderStep();
 });
