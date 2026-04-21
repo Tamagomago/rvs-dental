@@ -24,30 +24,40 @@
             <p class="text-sm">No procedure files found</p>
         </div>
     @else
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 p-5" id="folder-grid">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-5" id="folder-grid">
             @foreach ($folders as $folder)
-                <div 
-                    class="folder-card border border-border rounded-xl p-3 cursor-pointer select-none transition-colors hover:bg-secondary"
+                @php
+                    $status = strtolower((string) ($folder['status'] ?? ''));
+                    $statusClasses = match ($status) {
+                        'completed' => 'bg-success/10 text-success border-success/30',
+                        'cancelled' => 'bg-danger-muted text-danger border-danger/25',
+                        'no show' => 'bg-pending/15 text-pending border-pending/35',
+                        default => 'bg-secondary text-primary border-primary/25',
+                    };
+                @endphp
+                <div
+                    class="folder-card border border-border rounded-xl p-3 cursor-pointer select-none transition-all bg-background hover:bg-secondary/60 hover:border-primary/30"
                     data-folder-info="{{ json_encode($folder)}}"
+                    data-id="{{ $folder['id'] }}"
                 >
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <p class="folder-name text-sm font-bold truncate">{{ $folder['label'] }}</p>
+                        <span class="inline-flex shrink-0 px-2.5 py-1 rounded-full text-[10px] border font-mono font-semibold uppercase tracking-wide {{ $statusClasses }}">
+                            {{ $folder['status'] }}
+                        </span>
+                    </div>
 
-                    {{-- Folder icon --}}
-                    <svg class="folder-svg w-10 h-8 mb-2" viewBox="0 0 40 32" fill="none">
-                        <rect x="0" y="8" width="40" height="22" rx="3" class="folder-front" fill="#888780"/>
-                        <rect x="0" y="6" width="18" height="6" rx="2" class="folder-back" fill="#B4B2A9"/>
-                        <rect x="0" y="10" width="40" height="20" rx="3" class="folder-front" fill="#888780" opacity="0.85"/>
-                    </svg>
+                    <div class="flex items-center gap-2 mb-2.5">
+                        <svg class="folder-svg w-8 h-7" viewBox="0 0 40 32" fill="none">
+                            <rect x="0" y="8" width="40" height="22" rx="3" class="folder-front" fill="#888780"/>
+                            <rect x="0" y="6" width="18" height="6" rx="2" class="folder-back" fill="#B4B2A9"/>
+                            <rect x="0" y="10" width="40" height="20" rx="3" class="folder-front" fill="#888780" opacity="0.85"/>
+                        </svg>
+                        <p class="text-xs text-muted-foreground uppercase tracking-wide">Procedure Images</p>
+                    </div>
 
-                    <p class="folder-name text-sm font-medium truncate">{{ $folder['label'] }}</p>
-                    <p class="folder-meta text-xs text-muted-foreground truncate mt-0.5">
-                        {{ $folder['date'] }} | {{ $folder['slot'] }}
-                    </p>
-                    <span class="inline-block mt-1.5 px-2 py-0.5 rounded-full text-xs border
-                        {{ $folder['status'] === 'completed'
-                            ? 'bg-green-50 text-green-700 border-green-200'
-                            : 'bg-blue-50 text-blue-700 border-blue-200' }}">
-                        {{ $folder['status'] }}
-                    </span>
+                    <p class="folder-meta text-xs text-muted-foreground truncate">{{ $folder['date'] }}</p>
+                    <p class="folder-meta text-xs text-muted-foreground truncate">{{ $folder['slot'] }}</p>
                 </div>
             @endforeach
         </div>
@@ -78,12 +88,12 @@
     const setActiveId = (id) => {
         document.querySelectorAll('.folder-card').forEach(el => {
             const isThis = el.dataset.id == id;
-            el.classList.toggle('border-blue-400', isThis);
-            el.classList.toggle('bg-blue-50', isThis);
-            el.querySelectorAll('.folder-front').forEach(r => r.setAttribute('fill', isThis ? '#378ADD' : '#888780'));
-            el.querySelectorAll('.folder-back').forEach(r => r.setAttribute('fill', isThis ? '#85B7EB' : '#B4B2A9'));
+            el.classList.toggle('border-gray-400', isThis);
+            el.classList.toggle('bg-secondary', isThis);
+            el.querySelectorAll('.folder-front').forEach(r => r.setAttribute('fill', isThis ? '#3a8574' : '#888780'));
+            el.querySelectorAll('.folder-back').forEach(r => r.setAttribute('fill', isThis ? '#59af9c' : '#B4B2A9'));
             activeId = id;
-        })
+        });
     }
 
     const openFolder = (folder) => {
@@ -125,7 +135,7 @@
             }
             clickTimer = setTimeout(() => {
                 clickTimer = null;
-                activeId == folder.dataset.folderInfo ? reset() : setActiveId(JSON.parse(folder.dataset.folderInfo).id);
+                activeId == folder.dataset.id ? reset() : setActiveId(JSON.parse(folder.dataset.folderInfo).id);
             }, 200)
         });
 
