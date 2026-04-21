@@ -124,11 +124,13 @@ class AppointmentController extends Controller
         return view('pages.appointments.generate', compact('appointment'));
     }
 
-    public function view(Appointment $appointment) {
+    public function view(Appointment $appointment)
+    {
         $appointment->load([
             'appointmentProcedures.dentalProcedure',
-            'appointmentProcedures.ledger'
+            'appointmentProcedures.ledger',
         ]);
+
         return view('pages.appointments.view', compact('appointment'));
     }
 
@@ -152,34 +154,61 @@ class AppointmentController extends Controller
             ->map(fn ($id) => (int) $id)
             ->all();
 
+        $otherConditionNotes = $appointment->patientConditions()
+            ->whereHas('condition', fn ($query) => $query->where('condition_name', 'Others'))
+            ->value('notes');
+
         return view('pages.appointments.medical-form', compact(
             'appointment',
             'questions',
             'conditions',
             'existingResponses',
-            'existingConditionIds'
+            'existingConditionIds',
+            'otherConditionNotes'
         ));
     }
 
     public function storeMedicalForm(Request $request, Appointment $appointment)
     {
-        $radioOnly = [1, 6, 7, 10, 11, 12];
+        $radioOnly = [1, 6, 7];
+        $womenOnly = [10, 11, 12];
         $radioWithNotes = [2, 3, 4, 5, 8];
         $textOnly = [9, 13, 14];
+        $otherConditionId = (int) MedicalCondition::query()
+            ->where('condition_name', 'Others')
+            ->value('id');
 
         $rules = [
             'conditions' => ['nullable', 'array'],
             'conditions.*' => ['integer', 'exists:medical_conditions,id'],
+            'other_condition_notes' => ['nullable', 'string'],
+        ];
+
+        $messages = [
+            'responses.*.answer.required' => 'Required.',
+            'responses.*.answer.in' => 'Invalid choice.',
+            'responses.*.notes.required' => 'Required.',
+            'responses.*.notes.required_if' => 'Note is required if answer is Yes.',
+            'other_condition_notes.required' => 'Required.',
         ];
 
         foreach ($radioOnly as $questionId) {
+            $rules["responses.{$questionId}.answer"] = ['required', 'in:Yes,No'];
+            $rules["responses.{$questionId}.notes"] = ['nullable', 'string'];
+        }
+
+        foreach ($womenOnly as $questionId) {
             $rules["responses.{$questionId}.answer"] = ['required', 'in:Yes,No,N/A'];
             $rules["responses.{$questionId}.notes"] = ['nullable', 'string'];
         }
 
         foreach ($radioWithNotes as $questionId) {
-            $rules["responses.{$questionId}.answer"] = ['required', 'in:Yes,No,N/A'];
-            $rules["responses.{$questionId}.notes"] = ['nullable', 'string'];
+            $rules["responses.{$questionId}.answer"] = ['required', 'in:Yes,No'];
+            $rules["responses.{$questionId}.notes"] = [
+                'nullable',
+                'string',
+                "required_if:responses.{$questionId}.answer,Yes",
+            ];
         }
 
         foreach ($textOnly as $questionId) {
@@ -187,16 +216,24 @@ class AppointmentController extends Controller
             $rules["responses.{$questionId}.answer"] = ['nullable', 'in:Yes,No,N/A'];
         }
 
-        $validated = $request->validate($rules);
+        $validated = $request->validate($rules, $messages);
 
         $selectedConditions = collect($validated['conditions'] ?? [])
             ->map(fn ($id) => (int) $id)
             ->unique()
             ->values();
 
-        $questionIds = array_merge($radioOnly, $radioWithNotes, $textOnly);
+        if ($otherConditionId !== 0 && $selectedConditions->contains($otherConditionId)) {
+            $request->validate([
+                'other_condition_notes' => ['required', 'string'],
+            ], $messages);
+        }
 
-        DB::transaction(function () use ($appointment, $validated, $questionIds, $textOnly, $selectedConditions) {
+        $otherConditionNotes = trim((string) ($validated['other_condition_notes'] ?? $request->input('other_condition_notes', '')));
+
+        $questionIds = array_merge($radioOnly, $womenOnly, $radioWithNotes, $textOnly);
+
+        DB::transaction(function () use ($appointment, $validated, $questionIds, $textOnly, $selectedConditions, $otherConditionId, $otherConditionNotes) {
             foreach ($questionIds as $questionId) {
                 $input = data_get($validated, "responses.{$questionId}", []);
                 $notes = trim((string) data_get($input, 'notes', ''));
@@ -225,7 +262,9 @@ class AppointmentController extends Controller
                     ->map(fn ($conditionId) => [
                         'appointment_id' => $appointment->appointment_id,
                         'condition_id' => $conditionId,
-                        'notes' => null,
+                        'notes' => $conditionId === $otherConditionId && $otherConditionNotes !== ''
+                            ? $otherConditionNotes
+                            : null,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ])

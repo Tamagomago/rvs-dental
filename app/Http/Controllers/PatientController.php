@@ -6,10 +6,10 @@ use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PatientController extends Controller
 {
@@ -100,9 +100,15 @@ class PatientController extends Controller
             ->join('appointments', 'appointments.appointment_id', '=', 'patient_responses.appointment_id')
             ->join('medical_questions', 'medical_questions.question_id', '=', 'patient_responses.question_id')
             ->where('appointments.patient_id', $patient->patient_id)
-            ->select('patient_responses.answer', 'medical_questions.question')
+            ->where(function ($query) {
+                $query->where('patient_responses.answer', '!=', 'N/A')
+                    ->orWhere(function ($subQuery) {
+                        $subQuery->whereNotNull('patient_responses.notes')
+                            ->where('patient_responses.notes', '!=', '');
+                    });
+            })
+            ->select('patient_responses.answer', 'patient_responses.notes', 'medical_questions.question')
             ->orderByDesc('appointments.scheduled_at')
-            ->orderBy('medical_questions.question')
             ->get();
 
         $medicalConditions = DB::table('medical_conditions')
@@ -117,23 +123,34 @@ class PatientController extends Controller
             ->map(fn ($id) => (int) $id)
             ->all();
 
+        $otherConditionNote = DB::table('patient_conditions')
+            ->join('appointments', 'appointments.appointment_id', '=', 'patient_conditions.appointment_id')
+            ->join('medical_conditions', 'medical_conditions.id', '=', 'patient_conditions.condition_id')
+            ->where('appointments.patient_id', $patient->patient_id)
+            ->where('medical_conditions.condition_name', 'Others')
+            ->whereNotNull('patient_conditions.notes')
+            ->where('patient_conditions.notes', '!=', '')
+            ->orderByDesc('appointments.scheduled_at')
+            ->value('patient_conditions.notes');
+
         $folders = Appointment::where('patient_id', $patient->patient_id)
             ->with('procedureFiles')
             ->orderByDesc('scheduled_at')
             ->get()
-            ->map(fn($appointment) => [
+            ->map(fn ($appointment) => [
                 'id' => $appointment->appointment_id,
-                'label' => 'RVS-' . str_pad($appointment->appointment_id, 4, '0', STR_PAD_LEFT),
+                'label' => 'RVS-'.str_pad($appointment->appointment_id, 4, '0', STR_PAD_LEFT),
                 'date' => $appointment->scheduled_at->format('M d, Y'),
                 'slot' => $appointment->slot,
                 'status' => $appointment->status,
-                'files' => $appointment->procedureFiles->map(fn($file) => [
+                'files' => $appointment->procedureFiles->map(fn ($file) => [
                     'id' => $file->procedure_file_id,
                     'name' => $file->file_name,
                     'url' => Storage::url("appointments/{$appointment->appointment_id}/{$file->file_name}"),
                 ]),
             ]);
-        return view('pages.patients.show', compact('patient', 'medicalHistoryLastUpdatedAt', 'patientResponses', 'medicalConditions', 'patientConditionIds', 'folders'));
+
+        return view('pages.patients.show', compact('patient', 'medicalHistoryLastUpdatedAt', 'patientResponses', 'medicalConditions', 'patientConditionIds', 'otherConditionNote', 'folders'));
     }
 
     // Show patient edit form
@@ -174,20 +191,21 @@ class PatientController extends Controller
             ->with('success', 'Patient removed successfully.');
     }
 
-    public function search(Request $request): JsonResponse {
+    public function search(Request $request): JsonResponse
+    {
         $request->validate([
-            'query' => 'required|string|min:3|max:100'
+            'query' => 'required|string|min:3|max:100',
         ]);
 
         $searchTerm = $request->input('query');
-        
+
         $patients = Patient::where('first_name', 'like', "%{$searchTerm}%")
             ->orWhere('last_name', 'like', "%{$searchTerm}%")
             ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$searchTerm}%"])
             ->select('first_name', 'last_name', 'patient_id')
             ->orderBy('last_name')
             ->get(10);
-        
+
         return response()->json($patients);
     }
 }

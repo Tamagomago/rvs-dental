@@ -15,9 +15,18 @@
         @else
             <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-6">
                 @foreach ($patientResponses as $response)
+                    @php
+                        $hasNotes = !empty($response->notes);
+                        $answerDisplay = $response->answer === 'N/A' && $hasNotes
+                            ? $response->notes
+                            : $response->answer;
+                    @endphp
                     <li class="flex flex-col">
-                        <span class="font-bold text-xl">{{ $response->answer }}</span>
+                        <span class="font-bold text-xl">{{ $answerDisplay }}</span>
                         <span>{{ $response->question }}</span>
+                        @if ($response->answer === 'Yes' && $hasNotes)
+                            <span class="text-base text-gray-700">Note: {{ $response->notes }}</span>
+                        @endif
                     </li>
                 @endforeach
             </ul>
@@ -35,7 +44,12 @@
                     @endphp
                     <li class="flex items-center gap-3 text-xs">
                         <span class="h-4 w-4 border border-border rounded-sm {{ $hasCondition ? 'bg-primary border-primary' : 'bg-transparent' }}"></span>
-                        <span>{{ $condition->condition_name }}</span>
+                        <span>
+                            {{ $condition->condition_name }}
+                            @if ($condition->condition_name === 'Others' && !empty($otherConditionNote))
+                                <span class="block italic text-gray-600">Note: {{ $otherConditionNote }}</span>
+                            @endif
+                        </span>
                     </li>
                 @endforeach
             </ul>
